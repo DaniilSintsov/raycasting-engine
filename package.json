@@ -5,10 +5,13 @@
   "main": "webpack.config.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-dev-server --open",
-    "build": "cross-env NODE_ENV=production webpack --mode production"
+    "build": "cross-env NODE_ENV=production webpack --mode production",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "Daniil Sintsov <daniilsintsov2007@yandex.ru>",
+  "homepage": "https://daniilsintsov.github.io/raycasting-engine",
   "license": "ISC",
   "browserslist": "> 0.25%, not dead",
   "devDependencies": {
