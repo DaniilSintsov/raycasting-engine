@@ -1,0 +1,31 @@
+{
+  "name": "boom",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack-dev-server --open",
+    "build": "cross-env NODE_ENV=production webpack --mode production"
+  },
+  "keywords": [],
+  "author": "Daniil Sintsov <daniilsintsov2007@yandex.ru>",
+  "license": "ISC",
+  "browserslist": "> 0.25%, not dead",
+  "devDependencies": {
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest",
+    "babel-loader": "latest",
+    "copy-webpack-plugin": "latest",
+    "cross-env": "latest",
+    "css-loader": "latest",
+    "html-webpack-plugin": "latest",
+    "mini-css-extract-plugin": "latest",
+    "webpack": "latest",
+    "webpack-cli": "latest",
+    "webpack-dev-server": "latest"
+  },
+  "dependencies": {
+    "gh-pages": "^4.0.0",
+    "stats.js": "^0.17.0"
+  }
+}
