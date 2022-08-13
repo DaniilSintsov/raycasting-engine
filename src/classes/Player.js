@@ -1,4 +1,4 @@
-import {PLAYER} from '../settings'
+import {DOUBLE_PI, PLAYER} from '../settings'
 
 export class Player {
   constructor() {
@@ -22,7 +22,6 @@ export class Player {
   movement(pressedKeys) {
     const sin_a = Math.sin(this.angle)
     const cos_a = Math.cos(this.angle)
-
     if (pressedKeys.up) {
       this.x += PLAYER.speed * cos_a
       this.y += PLAYER.speed * sin_a
@@ -45,5 +44,6 @@ export class Player {
     if (pressedKeys.turnRight) {
       this.angle += 0.01
     }
+    this.angle = this.angle % DOUBLE_PI < 0 ? DOUBLE_PI + this.angle % DOUBLE_PI : this.angle % DOUBLE_PI
   }
 }
