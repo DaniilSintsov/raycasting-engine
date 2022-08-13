@@ -1,12 +1,13 @@
 // Map
 export const TEXT_MAP = [
-  ['11111111111'],
-  ['1.........1'],
-  ['1..2...2..1'],
-  ['1.........1'],
-  ['1..2...2..1'],
-  ['1.........1'],
-  ['11111111111']
+  '111111111111',
+  '1.....2....1',
+  '1.22.....2.1',
+  '1..........1',
+  '1.22.......1',
+  '1.2......2.1',
+  '1.....2....1',
+  '111111111111'
 ]
 
 // Screen settings
@@ -37,6 +38,11 @@ export const TEXTURE_WIDTH = 1200
 export const TEXTURE_HEIGHT = 1200
 export const TEXTURE_SCALE = Math.floor(TEXTURE_WIDTH / TILE)
 
+// Sprite settings
+export const DOUBLE_PI = Math.PI * 2
+export const CENTER_RAY = Math.floor(NUM_RAYS / 2) - 1
+export const FAKE_RAYS = 100
+
 // Colors settings
 export const COLORS = {
   white: '#fff',
@@ -53,8 +59,8 @@ export const COLORS = {
 
 // Player settings
 export const PLAYER = {
-  x: TILE * 1.5,
-  y: TILE * 1.5,
+  x: 150,
+  y: 350,
   angle: 0,
   speed: 2
 }

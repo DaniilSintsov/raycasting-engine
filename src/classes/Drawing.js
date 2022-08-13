@@ -1,6 +1,6 @@
 import {
   COLORS,
-  HALF_HEIGHT, HALF_WIDTH,
+  HALF_HEIGHT,
   HEIGHT,
   MAP_SCALE,
   MAP_TILE,
@@ -9,8 +9,30 @@ import {
   TEXT_MAP,
   WIDTH
 } from '../settings'
-import {rayCasting} from '../rayCasting'
 import {miniMap} from '../map'
+import {toDegrees} from '../utils/utils'
+
+function sorted(items, kwargs = {}) {
+  const key = kwargs.key === undefined ? x => x : kwargs.key
+  const reverse = kwargs.reverse === undefined ? false : kwargs.reverse
+  const sortKeys = items.map((item, pos) => [key(item), pos])
+  const comparator = Array.isArray(sortKeys[0][0])
+    ? ((left, right) => {
+      for (let n = 0; n < Math.min(left.length, right.length); n++) {
+        const vLeft = left[n], vRight = right[n]
+        const order = vLeft === vRight ? 0 : (vLeft > vRight ? 1 : -1)
+        if (order !== 0) return order
+      }
+      return left.length - right.length
+    })
+    : ((left, right) => {
+      const vLeft = left[0], vRight = right[0]
+      return vLeft === vRight ? 0 : (vLeft > vRight ? 1 : -1)
+    })
+  sortKeys.sort(comparator)
+  if (reverse) sortKeys.reverse()
+  return sortKeys.map((order) => items[order[1]])
+}
 
 export class Drawing {
   constructor(context, ...textures) {
@@ -27,16 +49,19 @@ export class Drawing {
   }
 
   background(playerAngle) {
-    const skyOffset = -10 * (playerAngle * 180 / Math.PI) % WIDTH
-    this.context.drawImage(this.textures['S'], skyOffset, 0, WIDTH, HALF_HEIGHT)
-    this.context.drawImage(this.textures['S'], skyOffset - WIDTH, 0, WIDTH, HALF_HEIGHT)
-    this.context.drawImage(this.textures['S'], skyOffset + WIDTH, 0, WIDTH, HALF_HEIGHT)
+    toDegrees(playerAngle)
+    this.context.drawImage(this.textures['S'], 0, 0, WIDTH, HALF_HEIGHT)
     this.context.fillStyle = COLORS.darkgray
     this.context.fillRect(0, HALF_HEIGHT, WIDTH, HALF_HEIGHT)
   }
 
-  world(playerX, playerY, playerAngle) {
-    rayCasting(this.context, playerX, playerY, playerAngle, this.textures)
+  world(worldObjects) {
+    sorted(worldObjects, {key: n => n[0], reverse: true}).forEach(obj => {
+      if (obj[0]) {
+        const [_, object] = obj
+        this.context.drawImage(...object)
+      }
+    })
   }
 
   miniMap(player) {
@@ -44,7 +69,7 @@ export class Drawing {
     const mapY = MINI_MAP_Y + Math.floor(player.posY / MAP_SCALE)
 
     this.context.fillStyle = COLORS.black
-    this.context.fillRect(MINI_MAP_X, MINI_MAP_Y, MAP_TILE * TEXT_MAP[0][0].length, MAP_TILE * TEXT_MAP.length)
+    this.context.fillRect(MINI_MAP_X, MINI_MAP_Y, MAP_TILE * TEXT_MAP[0].length, MAP_TILE * TEXT_MAP.length)
 
     this.context.strokeStyle = COLORS.yellow
     this.context.beginPath()
