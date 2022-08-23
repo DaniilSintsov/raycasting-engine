@@ -1,8 +1,8 @@
 import {
   CENTER_RAY,
-  DELTA_ANGLE,
+  DELTA_ANGLE, DOUBLE_HEIGHT,
   DOUBLE_PI,
-  FAKE_RAYS,
+  FAKE_RAYS, FAKE_RAYS_RANGE,
   HALF_FOV,
   HALF_HEIGHT,
   NUM_RAYS,
@@ -55,16 +55,7 @@ class SpriteObject {
     }
   }
 
-  objectLocate(player, walls) {
-    const fakeWalls0 = []
-    const fakeWalls1 = []
-    for (let i = 0; i < FAKE_RAYS; i++) {
-      fakeWalls0.push(walls[0])
-    }
-    for (let i = 0; i < FAKE_RAYS; i++) {
-      fakeWalls1.push(walls[walls.length - 1])
-    }
-    const fakeWalls = [...fakeWalls0, ...walls, ...fakeWalls1]
+  objectLocate(player) {
     const dX = this.posX - player.posX
     const dY = this.posY - player.posY
     let distanceToSprite = Math.sqrt(dX ** 2 + dY ** 2)
@@ -78,7 +69,10 @@ class SpriteObject {
     distanceToSprite *= Math.cos(HALF_FOV - currentRay * DELTA_ANGLE)
     const fakeRay = currentRay + FAKE_RAYS
 
-    if (0 <= fakeRay && fakeRay <= NUM_RAYS - 1 + 2 * FAKE_RAYS && distanceToSprite < fakeWalls[fakeRay][0]) {
+    if (0 <= fakeRay && fakeRay <= FAKE_RAYS_RANGE && distanceToSprite > 30) {
+      const projHeight = Math.min(Math.floor(PROJ_COEFF / distanceToSprite * this.scale), DOUBLE_HEIGHT)
+      const halfProjHeight = Math.floor(projHeight / 2)
+      const shift = halfProjHeight * this.shift
       if (!this.isStatic) {
         if (theta < 0) {
           theta += DOUBLE_PI
@@ -91,9 +85,6 @@ class SpriteObject {
           }
         }
       }
-      const projHeight = Math.floor(PROJ_COEFF / distanceToSprite * this.scale)
-      const halfProjHeight = Math.floor(projHeight / 2)
-      const shift = halfProjHeight * this.shift
       const sprite = [this.object, currentRay * SCALE - halfProjHeight, HALF_HEIGHT - halfProjHeight + shift, projHeight, projHeight]
       return [distanceToSprite, sprite]
     } else {

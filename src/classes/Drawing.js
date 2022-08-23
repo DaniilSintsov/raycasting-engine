@@ -3,10 +3,7 @@ import {
   HALF_HEIGHT,
   HEIGHT,
   MAP_SCALE,
-  MAP_TILE,
-  MINI_MAP_X,
-  MINI_MAP_Y,
-  TEXT_MAP,
+  MAP_TILE, MINIMAP_POS, MINIMAP_RES, MINIMAP_SCALE, TEXT_MAP, TILE,
   WIDTH
 } from '../settings'
 import {miniMap} from '../map'
@@ -40,7 +37,9 @@ export class Drawing {
     this.textures = {
       '1': textures[0],
       '2': textures[1],
-      'S': textures[2]
+      '3': textures[2],
+      '4': textures[3],
+      'S': textures[4]
     }
   }
 
@@ -65,27 +64,27 @@ export class Drawing {
   }
 
   miniMap(player) {
-    const mapX = MINI_MAP_X + Math.floor(player.posX / MAP_SCALE)
-    const mapY = MINI_MAP_Y + Math.floor(player.posY / MAP_SCALE)
+    const mapX = MINIMAP_POS[0] + Math.floor(player.posX / MAP_SCALE)
+    const mapY = MINIMAP_POS[1] + Math.floor(player.posY / MAP_SCALE)
 
     this.context.fillStyle = COLORS.black
-    this.context.fillRect(MINI_MAP_X, MINI_MAP_Y, MAP_TILE * TEXT_MAP[0].length, MAP_TILE * TEXT_MAP.length)
+    this.context.fillRect(MINIMAP_POS[0], MINIMAP_POS[1], MINIMAP_RES[0], MINIMAP_RES[1])
 
     this.context.strokeStyle = COLORS.yellow
     this.context.beginPath()
     this.context.moveTo(mapX, mapY)
-    this.context.lineTo(mapX + 12 * Math.cos(player.getAngle), mapY + 12 * Math.sin(player.getAngle))
+    this.context.lineTo(mapX + 11 * Math.cos(player.getAngle), mapY + 11 * Math.sin(player.getAngle))
     this.context.closePath()
     this.context.stroke()
 
     this.context.fillStyle = COLORS.darkorange
     this.context.beginPath()
-    this.context.arc(mapX, mapY, 5, 0, Math.PI * 2)
+    this.context.arc(mapX, mapY, 4, 0, Math.PI * 2)
     this.context.fill()
 
     miniMap.forEach(cell => {
       this.context.fillStyle = COLORS.darkbrown
-      this.context.fillRect(cell[0] / MAP_SCALE + MINI_MAP_X, cell[1] / MAP_SCALE + MINI_MAP_Y, MAP_TILE, MAP_TILE)
+      this.context.fillRect(cell[0] / TILE * MAP_TILE + MINIMAP_POS[0], cell[1] / TILE * MAP_TILE + MINIMAP_POS[1], MAP_TILE, MAP_TILE)
     })
   }
 }
